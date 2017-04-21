@@ -1,8 +1,12 @@
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+//http://www.dreamincode.net/forums/topic/377473-graph-data-structure-tutorial/
 
-public class GraphMain(){
+public class GraphAll{
 
-
-	public class Graph{
+	public static class Graph{
 
 		private HashMap<String, Vertex> vertices;
 		private HashMap<Integer, Edge> edges;
@@ -21,6 +25,11 @@ public class GraphMain(){
 			}
 		}
 
+		public void print(){
+			System.out.println(vertices);
+			System.out.println(edges);
+		}
+
 		public boolean addEdge(Vertex v1, Vertex v2){
 			return addEdge(v1, v2, 1);
 		}
@@ -35,7 +44,7 @@ public class GraphMain(){
 			Edge e = new Edge(v1, v2, w);
 
 			// e already contains in Edges map
-			if(e.containsKey(e.hashCode())){
+			if(edges.containsKey(e.hashCode())){
 				return false;
 			}
 			else if(v1.containsNeighbor(e) || v2.containsNeighbor(e)){
@@ -49,9 +58,22 @@ public class GraphMain(){
 		}
 
 		public boolean containsEdge(Edge e){
-			if(e.get){
-
+			// null handling
+			if(e.getVertex1() ==null || e.getVertex2() ==null){
+				return false;
 			}
+			return (edges.containsKey(e.hashCode()));
+		}
+
+		public Edge removeEdge(Edge e){
+
+			e.getVertex1().removeNeighbor(e);
+			e.getVertex2().removeNeighbor(e);
+			return this.edges.remove(e.hashCode());
+		}
+
+		public boolean containsVertex(Vertex v){
+			return this.vertices.containsKey(v.getLabel());
 		}
 
 		public Vertex getVertex(String label){
@@ -61,11 +83,46 @@ public class GraphMain(){
 		public boolean addVertex(Vertex v, boolean overWrite){
 			Vertex curr = vertices.get(v.getLabel());
 
+			//check if already exists
+			if(curr!=null){
+				//if so, overwrite. delete all neighbors
+
+				if(!overWrite){
+					return false;
+				}
+
+				while(curr.getNeighborCount()>0){
+					curr.removeNeighbor(0);
+				}
+				
+			}
+			vertices.put(v.getLabel(), v);
+			return true;
+			
 		}
+
+		public Vertex removeVertex(String label){
+			Vertex v= vertices.remove(label);
+
+			while(v.getNeighborCount() >0){
+				v.removeNeighbor(0);
+			}
+
+			return v;
+		}
+
+		public Set<String> getVertexKeys(){
+			return this.vertices.keySet();
+		}
+
+		public Set<Edge> getEdges(){
+			return new HashSet<Edge>(this.edges.values());
+		}
+
 
 	}
 
-	public class Vertex{
+	public static class Vertex{
 
 		private String label;
 		private ArrayList<Edge> neighborhood;
@@ -82,8 +139,28 @@ public class GraphMain(){
 			}
 		}
 
+		public boolean containsNeighbor(Edge other){
+			return this.neighborhood.contains(other);
+		}
+
+		public Edge getNeighbor(int index){
+			return this.neighborhood.get(index);
+		}
+
+		public ArrayList<Edge> getNeighbors(){
+			return new ArrayList<Edge>(this.neighborhood); //return a new list- immutable
+		}
+
+		public int getNeighborCount(){
+			return neighborhood.size();
+		}
+
 		public void removeNeighbor(Edge e){
 			this.neighborhood.remove(e);
+		}
+
+		public void removeNeighbor(int i){
+			this.neighborhood.remove(i);
 		}
 
 		public String getLabel(){
@@ -95,17 +172,19 @@ public class GraphMain(){
 				return false;
 			}
 
-			return this.label.equals((Vertex)other.label);
+			return this.label.equals(other.label);
 		}
 
 		public String toString(){
-			return label;
+			return "Vertex "+label;
 		}
+
+
 	}
 
-	public class Edge implements Comparable<Edge>{
+	public static class Edge implements Comparable<Edge>{
 
-		private Vertex one, two;
+		private Vertex v1, v2;
 		private int w; //weight
 
 
@@ -114,8 +193,8 @@ public class GraphMain(){
 		}
 
 		public Edge(Vertex v1, Vertex v2, int w){
-			this.one = one;
-			this.two = two;
+			this.v1 = v1;
+			this.v2 = v2;
 			this.w = w;
 		}
 
@@ -130,7 +209,7 @@ public class GraphMain(){
 			return this.w;
 		}
 
-		public int setWeight(int wNew){
+		public void setWeight(int wNew){
 			this.w = wNew;
 		}
 
@@ -151,10 +230,43 @@ public class GraphMain(){
 			return  (e.v1.equals(this.v1) && e.v2.equals(this.v2)) || (e.v1.equals(this.v2) && e.v2.equals(this.v1));
 		}
 
+		public Vertex getVertex1(){
+			return v1;
+		}
+
+		public Vertex getVertex2(){
+			return v2;
+		}
+
 	}
 
 	public static void main(String[] args){
 		Graph g = new Graph();
+
+		int nVertices=5;
+
+		Vertex[] vertices = new Vertex[nVertices];
+
+		Vertex v;
+
+		for(int i=0; i<nVertices; i++){
+			v=new Vertex(String.valueOf(i));
+			g.addVertex(v, true);
+			vertices[i] = v;
+		}
+
+		for(int i=0; i<nVertices-1; i++){
+			g.addEdge(vertices[i], vertices[i+1]);
+		}
+
+		g.print();
+
 	}
+
+
+
+
+
+
 
 }
