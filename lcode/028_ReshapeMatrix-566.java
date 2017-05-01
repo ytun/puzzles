@@ -7,7 +7,7 @@ public class Solution{
 
 	//super slow
 	//find more efficient way
-	public static int[][] matrixReshape(int[][] nums, int r, int c){
+	public static int[][] matrixReshape2(int[][] nums, int r, int c){
 
 		int r0=nums.length;
 		int c0=nums[0].length;
@@ -36,6 +36,71 @@ public class Solution{
 
 	}
 
+	// one of the two fastest
+	public static int[][] matrixReshape1(int[][] nums, int r, int c){
+
+		int r0=nums.length;
+		int c0=nums[0].length;
+		//check if possible
+		if( (r0==r && c0==c) || (r0*c0 != r*c) ){
+			return nums;
+		}
+
+		int[][] newArr = new int[r][c];
+		
+		int ir0=0;
+		int ic0=0;
+
+		for(int ir=0; ir< r; ir++){
+			for(int ic=0; ic<c; ic++){
+				newArr[ir][ic] = nums[ir0][ic0];
+				ic0++;
+
+				if(ic0== c0){
+					ic0=0;
+					ir0++;
+
+					// no need for this ir0 always increment correctly, won't go over ever, just incrementing is ok, only column repeats with modulus
+					// if(ir0==r0){
+					// 	ir0=0;
+					// }
+				}
+			}
+		}
+
+		return newArr;
+
+	}
+	// one of the two fastest
+	public static int[][] matrixReshape(int[][] nums, int r, int c){
+
+		int r0=nums.length;
+		int c0=nums[0].length;
+		int size = r0*c0;
+
+		System.out.println("r0,c0: "+r0 +"," + c0);
+
+		//check if possible
+		if(size != r*c){
+			return nums;
+		}
+	
+		int[][] newArr = new int[r][c];
+		// int ir0=0;
+		// int ic0=0;
+
+		for(int i=0; i< size; i++){
+			
+			// System.out.println(i/c +","+ i%r);
+			// System.out.println(i/c0 +","+ i%r0);
+			// System.out.println();
+			// i/c -> no need to round up cus c is already -1 since it starts from 0
+			newArr[i/c][i%c] = nums[i/c0][i%c0];
+		}
+
+		return newArr;
+
+	}
 	public static int[] indexToRC(int ri0, int ci0, int r0, int c0, int row, int col){
 
 		int i= (ri0 * c0) + ci0 + 1;
@@ -56,8 +121,12 @@ public class Solution{
 
 	public static void main(String[] args){
 		
-		int[][] nums = {{1,2,3}, {4,5,6}};
-		int r=3;
+		// int[][] nums = {{1,2,3}, {4,5,6}};
+		// int r=3;
+		// int c=2;
+	
+		int[][] nums = {{1,2,3,4}};//{{1,2}, {3,4}};
+		int r=2;
 		int c=2;
 
 		
