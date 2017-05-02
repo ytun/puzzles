@@ -18,21 +18,18 @@ public class Solution{
 		nums[index2]=temp;
 	}
 
-
-	//make it more efficient!!!
 	// note: the only element that could be bigger than the last one is the one before last one
 	// after all swaps  are done
 	public static int minMoves(int[] nums){
 		int nMoves= 0;
-		int lastIndex= nums.length-1;
-
-		if(nums.length>1 && nums[lastIndex-1] < nums[lastIndex]){
+		if(nums.length>0){
+			int lastIndex= nums.length-1;
 			int i = lastIndex; // i is the index to the left of equal numbers in sorted array
 			//eg. 2,3,4,4 -> 3's index = 1 = i
 			// sort first
 			quickSort(nums, 0, nums.length-1);
 
-			System.out.println(Arrays.toString(nums));
+			// System.out.println(Arrays.toString(nums));
 
 
 			while(i>0){ //>-1 && nums[i-1] != nums[i]){
@@ -41,7 +38,7 @@ public class Solution{
 
 				if(nums[lastIndex-1] > nums[lastIndex]){
 					swapElements(nums, lastIndex-1, lastIndex);
-					System.out.println("after swap:\n"+Arrays.toString(nums));
+					// System.out.println("after swap:\n"+Arrays.toString(nums));
 				}
 
 				makeMove(nums);
@@ -49,7 +46,7 @@ public class Solution{
 
 				if (i>0 && nums[i-1] == nums[i]){
 					i = i-1;
-			    	System.out.println("i: "+i);
+			    	// System.out.println("i: "+i);
 				}	
 			}
 		}
@@ -97,7 +94,7 @@ public class Solution{
 
 	public static void main(String[] args){
 		
-		int[] nums = {1,10};//{0};//{1, 2, 3};
+		int[] nums = {1, 2, 3};
 		System.out.println(minMoves(nums));
 
 	}

@@ -46,6 +46,8 @@ public class CycleDetector{
 	// 	return false;
 	// }
 
+
+	// same as black, grey and white method- grey is when isDeadEnd=true
 	public static boolean detectCycle(DirectedGraph<String> g){
 
 		Set<String> visited = new HashSet<String>();
@@ -77,8 +79,6 @@ public class CycleDetector{
 				Iterator<String> it=g.edgesFrom(start).iterator();
 				curr=(it.hasNext())? it.next() : null;
 			}
-				
-
 
 			//unvisited node
 			if(curr!=null && !visited.contains(curr)){
