@@ -54,6 +54,19 @@ public class DirectedGraph<T> implements Iterable<T>{
 		return Collections.unmodifiableSet(graphMap.get(node));
 	}
 
+	public T getUnvisitedRandomNode(Set<T> visited){
+		Iterator it = iterator();
+
+		T node= null;
+
+		while(it.hasNext()){
+			if(!visited.contains(node)){
+				return node;
+			}
+		}
+		return null;
+	}
+
 	// same as undirected
 	public T getUnvisitedNeighbor(T node, Set<T> visited){
 		Iterator it = edgesFrom(node).iterator();
