@@ -3,217 +3,214 @@ import java.util.HashSet;
 import java.util.Stack;
 import java.util.Iterator;
 
-public class CycleDetector{
+public class CycleDetector {
 
-	// public static boolean detectCycle(UnDirectedGraph<String> g){
+  // public static boolean detectCycle(UnDirectedGraph<String> g){
 
-	// 	Set<String> visited = new HashSet<String>();
-	// 	Stack<String> stack= new Stack<String>();
+  // 	Set<String> visited = new HashSet<String>();
+  // 	Stack<String> stack= new Stack<String>();
 
-	// 	String start= (String)g.iterator().next(); //start's neighbors will be explored
-	// 	String curr= "";
+  // 	String start= (String)g.iterator().next(); //start's neighbors will be explored
+  // 	String curr= "";
 
-	// 	if(start==null){
-	// 		return false;
-	// 	}
+  // 	if(start==null){
+  // 		return false;
+  // 	}
 
-	// 	stack.push(start); 
-	// 	visited.add(start);
+  // 	stack.push(start);
+  // 	visited.add(start);
 
-	// 	while(!stack.isEmpty()){
-			
-	// 		//Difference from DFT is below
-	// 		Iterator<String> it=g.edgesFrom(start).iterator();
-	// 		curr=(it.hasNext())? it.next() : null;
-		
-	// 		//unvisited node
-	// 		if(curr!=null && !visited.contains(curr)){
-	// 			visited.add(curr);
-	// 			stack.push(curr);
-	// 			start= curr;
-	// 		}//visited already
-	// 		else if(curr!=null && visited.contains(curr)){
-	// 			return true;
-	// 		}
-	// 		else{
-	// 			start = stack.pop();
-	// 		}
-	// 		// System.out.println("start: "+start + ", curr: "+ curr);
-	// 		// System.out.println("stack: "+stack);
-	// 		// System.out.println("visited: "+visited);
-	// 	}
+  // 	while(!stack.isEmpty()){
 
-	// 	return false;
-	// }
+  // 		//Difference from DFT is below
+  // 		Iterator<String> it=g.edgesFrom(start).iterator();
+  // 		curr=(it.hasNext())? it.next() : null;
 
+  // 		//unvisited node
+  // 		if(curr!=null && !visited.contains(curr)){
+  // 			visited.add(curr);
+  // 			stack.push(curr);
+  // 			start= curr;
+  // 		}//visited already
+  // 		else if(curr!=null && visited.contains(curr)){
+  // 			return true;
+  // 		}
+  // 		else{
+  // 			start = stack.pop();
+  // 		}
+  // 		// System.out.println("start: "+start + ", curr: "+ curr);
+  // 		// System.out.println("stack: "+stack);
+  // 		// System.out.println("visited: "+visited);
+  // 	}
 
-	// same as black, grey and white method- grey is when isDeadEnd=true
-	public static boolean detectCycle(DirectedGraph<String> g){
-
-		Set<String> visited = new HashSet<String>();
-		Stack<String> stack= new Stack<String>();
-
-		boolean isDeadEnd=false;
-
-		String dft = "";
-		String start= (String)g.iterator().next(); //start's neighbors will be explored
-		String curr= "";
-
-		if(start==null){
-			return false;
-		}
-
-		stack.push(start); 
-		visited.add(start);
-
-		dft = dft + start;
-
-		while(!stack.isEmpty()){
-
-			if(isDeadEnd){
-				curr=g.getUnvisitedRandomNode(visited);
-				isDeadEnd=false;
-			}
-			else{
-				//Difference from DFT is below
-				Iterator<String> it=g.edgesFrom(start).iterator();
-				curr=(it.hasNext())? it.next() : null;
-			}
-
-			//unvisited node
-			if(curr!=null && !visited.contains(curr)){
-				visited.add(curr);
-				stack.push(curr);
-				dft = dft + curr;
-				System.out.println(dft);
-				start= curr;
-
-				
-			}//visited already
-			else if(!isDeadEnd && curr!=null && stack.search(curr)>-1){//&& visited.contains(curr)){
-				System.out.println("curr: "+curr);
-				return true;
-			}
-			else{
-				start = stack.pop();
-				isDeadEnd=true;
-			}
-
-			// System.out.println("start: "+start + ", curr: "+ curr);
-			System.out.println("stack: "+stack);
-			// System.out.println("visited: "+visited);
-		}
-
-		return false;
-	}
-
-	
-
-	public static String dft(DirectedGraph<String> g){
-		Set<String> visited = new HashSet<String>();
-		Stack<String> stack= new Stack<String>();
-
-		String dft = "";
-		String start= (String)g.iterator().next(); //start's neighbors will be explored
-		String curr= "";
-
-		// Iterator it= g.iterator();
-		if(start==null){
-			return "";
-		}
-
-		// dft = dft + start;
-		stack.push(start); 
-		visited.add(start);
-		dft = dft + start;
-
-		while(!stack.isEmpty()){
-			
-			curr= (String)g.getUnvisitedNeighbor(start, visited);//g.edgesFrom(curr); //String)it.next(); 
-
-			//unvisited node
-			if(curr!=null && !visited.contains(curr)){
-				visited.add(curr);
-				stack.push(curr);
-				dft = dft + curr;
-				start= curr;
-			}
-			else{
-				start = stack.pop();
-			}
-
-			// System.out.println("start: "+start + ", curr: "+ curr);
-			// System.out.println("stack: "+stack);
-			// System.out.println("visited: "+visited);
-		}
-
-		return dft;
-	}
-
-	// public static void mainDFT(){
-	// 	UndirectedGraph<String> g = new UndirectedGraph<String>();
-
-	// 	String[] vValues = {"A","B","C","D","E","F","G","H"};
-
-	// 	for(int i=0; i<vValues.length; i++){
-	// 		g.addNode(new String(vValues[i]));
-	// 	}
-
-	// 	g.addEdge("A", "B");
-	// 	g.addEdge("B", "E");
-	// 	g.addEdge("E", "G");
-	// 	g.addEdge("G", "A");
-	// 	g.addEdge("A", "D");
-	// 	g.addEdge("B", "F");
-	// 	g.addEdge("D", "F");
-	// 	g.addEdge("F", "C");
-	// 	g.addEdge("C", "H");
+  // 	return false;
+  // }
 
 
-	// 	System.out.println(g.toString());
-	// 	System.out.println(dft(g));
-	// 	// System.out.println(detectCycle(g));
+  // same as black, grey and white method- grey is when isDeadEnd=true
+  public static boolean detectCycle(DirectedGraph<String> g) {
 
-	// }
+    Set<String> visited = new HashSet<String>();
+    Stack<String> stack = new Stack<String>();
 
-	public static void mainCycleDirected(){
-		DirectedGraph<String> g = new DirectedGraph<String>();
+    boolean isDeadEnd = false;
 
-		String[] vValues = {"A","B","C","D","E","F","G","H"};
+    String dft = "";
+    String start = (String)g.iterator().next(); //start's neighbors will be explored
+    String curr = "";
 
-		for(int i=0; i<vValues.length; i++){
-			g.addNode(new String(vValues[i]));
-		}
+    if (start == null) {
+      return false;
+    }
 
-		g.addEdge("A", "B"); //g.addEdge("A", "B");
-		g.addEdge("B", "E");
-		g.addEdge("E", "G");
-		g.addEdge("G", "A");
-		g.addEdge("A", "D");
-		g.addEdge("B", "F");
-		g.addEdge("D", "F");
-		g.addEdge("F", "C");
-		g.addEdge("C", "H");
+    stack.push(start);
+    visited.add(start);
 
-		System.out.println(g.toString());
-		// System.out.println(dft(g));
-		System.out.println(detectCycle(g));
-	}
+    dft = dft + start;
 
-	public static void main(String[] args){
+    while (!stack.isEmpty()) {
 
-		// Stack<String> stack = new Stack<String>();
-		// stack.push("1");
-		// stack.push("2");
+      if (isDeadEnd) {
+        curr = g.getUnvisitedRandomNode(visited);
+        isDeadEnd = false;
+      } else {
+        //Difference from DFT is below
+        Iterator<String> it = g.edgesFrom(start).iterator();
+        curr = (it.hasNext()) ? it.next() : null;
+      }
+
+      //unvisited node
+      if (curr != null && !visited.contains(curr)) {
+        visited.add(curr);
+        stack.push(curr);
+        dft = dft + curr;
+        System.out.println(dft);
+        start = curr;
 
 
-		// System.out.println(stack.search("1"));
-		// System.out.println(stack.search("0"));
-		mainCycleDirected();
+      }//visited already
+      else if (!isDeadEnd && curr != null && stack.search(curr) > -1) { //&& visited.contains(curr)){
+        System.out.println("curr: " + curr);
+        return true;
+      } else {
+        start = stack.pop();
+        isDeadEnd = true;
+      }
+
+      // System.out.println("start: "+start + ", curr: "+ curr);
+      System.out.println("stack: " + stack);
+      // System.out.println("visited: "+visited);
+    }
+
+    return false;
+  }
 
 
 
-	}
+  public static String dft(DirectedGraph<String> g) {
+    Set<String> visited = new HashSet<String>();
+    Stack<String> stack = new Stack<String>();
+
+    String dft = "";
+    String start = (String)g.iterator().next(); //start's neighbors will be explored
+    String curr = "";
+
+    // Iterator it= g.iterator();
+    if (start == null) {
+      return "";
+    }
+
+    // dft = dft + start;
+    stack.push(start);
+    visited.add(start);
+    dft = dft + start;
+
+    while (!stack.isEmpty()) {
+
+      curr = (String)g.getUnvisitedNeighbor(start, visited); //g.edgesFrom(curr); //String)it.next();
+
+      //unvisited node
+      if (curr != null && !visited.contains(curr)) {
+        visited.add(curr);
+        stack.push(curr);
+        dft = dft + curr;
+        start = curr;
+      } else {
+        start = stack.pop();
+      }
+
+      // System.out.println("start: "+start + ", curr: "+ curr);
+      // System.out.println("stack: "+stack);
+      // System.out.println("visited: "+visited);
+    }
+
+    return dft;
+  }
+
+  // public static void mainDFT(){
+  // 	UndirectedGraph<String> g = new UndirectedGraph<String>();
+
+  // 	String[] vValues = {"A","B","C","D","E","F","G","H"};
+
+  // 	for(int i=0; i<vValues.length; i++){
+  // 		g.addNode(new String(vValues[i]));
+  // 	}
+
+  // 	g.addEdge("A", "B");
+  // 	g.addEdge("B", "E");
+  // 	g.addEdge("E", "G");
+  // 	g.addEdge("G", "A");
+  // 	g.addEdge("A", "D");
+  // 	g.addEdge("B", "F");
+  // 	g.addEdge("D", "F");
+  // 	g.addEdge("F", "C");
+  // 	g.addEdge("C", "H");
+
+
+  // 	System.out.println(g.toString());
+  // 	System.out.println(dft(g));
+  // 	// System.out.println(detectCycle(g));
+
+  // }
+
+  public static void mainCycleDirected() {
+    DirectedGraph<String> g = new DirectedGraph<String>();
+
+    String[] vValues = {"A", "B", "C", "D", "E", "F", "G", "H"};
+
+    for (int i = 0; i < vValues.length; i++) {
+      g.addNode(new String(vValues[i]));
+    }
+
+    g.addEdge("A", "B"); //g.addEdge("A", "B");
+    g.addEdge("B", "E");
+    g.addEdge("E", "G");
+    g.addEdge("G", "A");
+    g.addEdge("A", "D");
+    g.addEdge("B", "F");
+    g.addEdge("D", "F");
+    g.addEdge("F", "C");
+    g.addEdge("C", "H");
+
+    System.out.println(g.toString());
+    // System.out.println(dft(g));
+    System.out.println(detectCycle(g));
+  }
+
+  public static void main(String[] args) {
+
+    // Stack<String> stack = new Stack<String>();
+    // stack.push("1");
+    // stack.push("2");
+
+
+    // System.out.println(stack.search("1"));
+    // System.out.println(stack.search("0"));
+    mainCycleDirected();
+
+
+
+  }
 }
 
 

@@ -1,20 +1,20 @@
 import java.util.Set;
 import java.util.Iterator;
 
-public interface Graph<T>{
-	
-	public boolean addNode(T node);
+public interface Graph<T> {
 
-	public boolean addEdge(T start, T end);
+  public boolean addNode(T node);
 
-	public boolean removeEdge(T start, T end);
+  public boolean addEdge(T start, T end);
 
-	public boolean edgeExists(T start, T end);
+  public boolean removeEdge(T start, T end);
 
-	public Set<T> edgesFrom(T node);
+  public boolean edgeExists(T start, T end);
 
-	public Iterator<T> iterator();
+  public Set<T> edgesFrom(T node);
 
-	public T getUnvisitedNeighbor(T node, Set<T> visited);
+  public Iterator<T> iterator();
+
+  public T getUnvisitedNeighbor(T node, Set<T> visited);
 
 }

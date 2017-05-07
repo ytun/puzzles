@@ -7,101 +7,101 @@ import java.util.Iterator;
 
 //http://www.keithschwarz.com/interesting/code/kosaraju/DirectedGraph.java.html
 
-public class DirectedGraph<T> implements Iterable<T>{
+public class DirectedGraph<T> implements Iterable<T> {
 
-	private Map<T, Set<T>> graphMap = new HashMap<T, Set<T>>();
+  private Map<T, Set<T>> graphMap = new HashMap<T, Set<T>>();
 
-	public boolean addNode(T node){
-		if(graphMap.containsKey(node)){
-			return false;
-		}
-		graphMap.put(node, new HashSet<T>());
-		return true;
-	}
+  public boolean addNode(T node) {
+    if (graphMap.containsKey(node)) {
+      return false;
+    }
+    graphMap.put(node, new HashSet<T>());
+    return true;
+  }
 
-	public boolean addEdge(T start, T end){
+  public boolean addEdge(T start, T end) {
 
-		if(!graphMap.containsKey(start) || !graphMap.containsKey(end)){
-			return false;
-		}
+    if (!graphMap.containsKey(start) || !graphMap.containsKey(end)) {
+      return false;
+    }
 
-		graphMap.get(start).add(end);
-		return true;
-	}
+    graphMap.get(start).add(end);
+    return true;
+  }
 
-	public boolean removeEdge(T start, T end){
+  public boolean removeEdge(T start, T end) {
 
-		if(!graphMap.containsKey(start) || !graphMap.containsKey(end)){
-			return false;
-		}
+    if (!graphMap.containsKey(start) || !graphMap.containsKey(end)) {
+      return false;
+    }
 
-		graphMap.get(start).remove(end); //remove only value, since it is only edge
-		return true;
-	}
+    graphMap.get(start).remove(end); //remove only value, since it is only edge
+    return true;
+  }
 
-	public boolean edgeExists(T start, T end){
+  public boolean edgeExists(T start, T end) {
 
-		if(!graphMap.containsKey(start) || !graphMap.containsKey(end)){
-			return false;
-		}
-		
-		return graphMap.get(start).contains(end);//!neighbors.isEmpty();	
-	}
+    if (!graphMap.containsKey(start) || !graphMap.containsKey(end)) {
+      return false;
+    }
 
-	// if no node exist, return null.
-	public Set<T> edgesFrom(T node){
-		// return graphMap.get(node); //this is not immutable. create new set
-		return Collections.unmodifiableSet(graphMap.get(node));
-	}
+    return graphMap.get(start).contains(end);//!neighbors.isEmpty();
+  }
 
-	public T getUnvisitedRandomNode(Set<T> visited){
-		Iterator it = iterator();
+  // if no node exist, return null.
+  public Set<T> edgesFrom(T node) {
+    // return graphMap.get(node); //this is not immutable. create new set
+    return Collections.unmodifiableSet(graphMap.get(node));
+  }
 
-		T node= null;
+  public T getUnvisitedRandomNode(Set<T> visited) {
+    Iterator it = iterator();
 
-		while(it.hasNext()){
-			if(!visited.contains(node)){
-				return node;
-			}
-		}
-		return null;
-	}
+    T node = null;
 
-	// same as undirected
-	public T getUnvisitedNeighbor(T node, Set<T> visited){
-		Iterator it = edgesFrom(node).iterator();
-		T neighbor= null;
+    while (it.hasNext()) {
+      if (!visited.contains(node)) {
+        return node;
+      }
+    }
+    return null;
+  }
 
-		while(it.hasNext()){
-			neighbor= (T)it.next();
+  // same as undirected
+  public T getUnvisitedNeighbor(T node, Set<T> visited) {
+    Iterator it = edgesFrom(node).iterator();
+    T neighbor = null;
 
-			if(!visited.contains(neighbor)){
-				return neighbor;
-			}
-		}
-		return null;
-	}
+    while (it.hasNext()) {
+      neighbor = (T)it.next();
 
-	public Iterator<T> iterator(){
-		return graphMap.keySet().iterator();
-	}
+      if (!visited.contains(neighbor)) {
+        return neighbor;
+      }
+    }
+    return null;
+  }
 
-	public String toString(){
-		String g = "";
+  public Iterator<T> iterator() {
+    return graphMap.keySet().iterator();
+  }
 
-		for(Map.Entry<T, Set<T>> entry: graphMap.entrySet()){
-			g=g + entry.getKey().toString() + ": " + entry.getValue().toString() +"\n";
-		}
-		return g;
-		// return graphMap.toString();
+  public String toString() {
+    String g = "";
 
-		// for(T key: map.keySet()){
-		// }
+    for (Map.Entry<T, Set<T>> entry : graphMap.entrySet()) {
+      g = g + entry.getKey().toString() + ": " + entry.getValue().toString() + "\n";
+    }
+    return g;
+    // return graphMap.toString();
 
-		// Iterator it = graphMap.entrySet().iterator();
-		// while(it.hasNext()){
-		// 	Map.Entry pair = (Map.Entry)it.next();
-		//  pair.getKey(), pair.getValue();
-		// }
-	}
+    // for(T key: map.keySet()){
+    // }
+
+    // Iterator it = graphMap.entrySet().iterator();
+    // while(it.hasNext()){
+    // 	Map.Entry pair = (Map.Entry)it.next();
+    //  pair.getKey(), pair.getValue();
+    // }
+  }
 }
