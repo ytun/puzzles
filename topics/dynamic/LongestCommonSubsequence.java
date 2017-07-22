@@ -4,78 +4,97 @@ import java.util.Arrays;
 public class LongestCommonSubsequence {
 
 
+  //sol is not totally workking -- string apending i mean
 
+  public static int lcs_helper_recursive(String X, String Y, int m, int n, int[][] lcsTable) {
+    int length = 0;
 
-  public static int lcs_helper(String X, String Y, int m, int n, int[][] lcsTable) {
-    System.out.println("m,n: " + m + ", " + n);
+    // System.out.println("m: "+m +", n: "+n);
 
-    if (m == -1 || n == -1) {
-      return 0;
+    if(m==0 || n==0){
+      length= 0;
+
+      if(X.charAt(m)==Y.charAt(n)){
+        // sol+= X.charAt(m);
+        length= 1;
+      }
     }
-    if (lcsTable[m][n] > -1) {
-      return lcsTable[m][n];
+    else{
+      if(X.charAt(m)==Y.charAt(n)){
+        // sol += X.charAt(m); 
+        length= (lcsTable[m-1][n-1]>-1)? lcsTable[m-1][n-1] +1 : lcs_helper_recursive(X, Y, m-1, n-1, lcsTable) + 1;
+      }
+      else{
+        length=  Math.max( (lcsTable[m][n-1]>-1)? lcsTable[m][n-1]: lcs_helper_recursive(X, Y, m, n-1, lcsTable), (lcsTable[m-1][n]>-1)? lcsTable[m-1][n]: lcs_helper_recursive(X, Y, m-1, n, lcsTable) ) ;
+      }
+    
     }
 
-    int prevLength = 0;
+    lcsTable[m][n] = length;
 
-
-    //match
-    if (X.charAt(m) == Y.charAt(n)) {
-
-      // int mm = (m==0)? 0: m-1;
-      // int nn = (n==0)? 0: n-1;
-
-      // if(m == 0 && n ==0){
-      // 	prevLength = 0;
-      // }
-      // else{
-      // 	prevLength = lcs_helper(X, Y, mm, nn, lcsTable);
-      // }
-
-      lcsTable[m][n]  = 1 + lcs_helper(X, Y, m - 1, n - 1, lcsTable);
-
+    if(m==X.length()-1 && n==Y.length()-1){
       print(lcsTable);
-      return lcsTable[m][n];
-    } else {
-      // prevLength = (m == 0 && n ==0)? 0 : \
-      // 	Math.max(lcs_helper(X, Y, m, n-1, lcsTable), lcs_helper(X, Y, m-1, n, lcsTable));
+      // System.out.println("sol: "+sol);
 
-
-      // if(m == 0 && n ==0){
-      // 	prevLength = 0;
-      // }
-      // else if(m==0){
-
-      // 	// System.out.println("m,n : "+m +", "+n);
-      // 	prevLength = lcs_helper(X, Y, m, n-1, lcsTable);
-      // }
-      // else if(n==0){
-      // 	prevLength = lcs_helper(X, Y, m-1, n, lcsTable);
-      // }
-      // else{
-      prevLength = Math.max(lcs_helper(X, Y, m,  n - 1, lcsTable), lcs_helper(X, Y, m - 1, n, lcsTable));
-      // }
-
-      lcsTable[m][n] = prevLength;
-
-      print(lcsTable);
-      // System.out.println(Arrays.deepToString(lcsTable)+"\n");
-
-      return prevLength;
     }
+
+    return length;
+
   }
 
-  // public int lcs(){
+  public static int lcs_iterative(String X, String Y){
+    int[][] lcsTable = new int[X.length()][Y.length()];
 
-  // 	// for(int m=0; m<X.length; m++){
-  // 	// 	for(int n=0; n<Y.length; n++){
-  // 	// 		lcs_helper() ;
+    for (int i = 0 ; i < X.length(); i++) {
+      Arrays.fill(lcsTable[i], -1);
+    }
+    String sol="";
 
-  // 	// 	}
+    int m = X.length()-1;
+    int n= Y.length() -1;
 
-  // 	// }
+    for(int i=0; i<X.length(); i++){
+      for(int j=0; j<Y.length(); j++){
 
-  // }
+
+        // System.out.println(i+", "+j);
+
+        if(i==0 || j==0){
+          lcsTable[i][j] =0;
+
+          if(X.charAt(i)==Y.charAt(j)){
+            sol+= X.charAt(i);
+            lcsTable[i][j]=1;
+          }
+        }
+        else{
+          if(X.charAt(i)==Y.charAt(j)){
+            lcsTable[i][j] = 1+ lcsTable[i-1][j-1];
+            sol+= X.charAt(i);
+          }
+          else{
+            
+
+            lcsTable[i][j] = Math.max(lcsTable[i-1][j], lcsTable[i][j-1]);
+          }
+        }
+        
+
+
+      }
+      // print(lcsTable);
+
+    }
+    
+    System.out.println("sol: "+sol);
+
+    print(lcsTable);
+
+    return lcsTable[m][n];
+
+  }
+
+
   public static void print(int[][] table) {
     for (int i = 0; i < table.length; i ++) {
       System.out.println(Arrays.toString(table[i]));
@@ -85,18 +104,21 @@ public class LongestCommonSubsequence {
 
   public static void main(String[] args) {
 
-    String X = "agtb";//"aggtab"; //6
-    String Y = "gxtxayb"; //7
+    String Y = "AGGTAB";//"aggtab"; //6
+    String X = "GXTXAYB"; //7
 
     int[][] lcsTable = new int[X.length()][Y.length()];
 
     for (int i = 0 ; i < X.length(); i++) {
       Arrays.fill(lcsTable[i], -1);
     }
-    print(lcsTable);
+
+    
 
     // System.out.println(Arrays.deepToString(lcsTable));
-    System.out.println(lcs_helper(X, Y, X.length() - 1, Y.length() - 1, lcsTable));
+
+    System.out.println(lcs_helper_recursive(X, Y, X.length()-1 , Y.length()-1 , lcsTable));
+    System.out.println(lcs_iterative(X, Y));
 
   }
 }
